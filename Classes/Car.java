@@ -16,6 +16,13 @@ public class Car extends Thread {
 
     @Override
     public void run() {
+
+        try {
+            Thread.sleep(arrivalTime * 1000L);
+        } catch (InterruptedException e) {
+            System.out.println(e.getMessage());
+        }
         parkingLot.parkCar(carId , gateName , arrivalTime , parkingDuration);
+
     }
 }
