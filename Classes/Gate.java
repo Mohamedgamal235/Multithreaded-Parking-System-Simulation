@@ -1,7 +1,7 @@
-package Assignment;
+import java.util.List;
 
 public class Gate implements Runnable {
- private List<Car> cars ;
+    private List<Car> cars ;
 
     Gate(List<Car> cars) {
         this.cars = cars;
