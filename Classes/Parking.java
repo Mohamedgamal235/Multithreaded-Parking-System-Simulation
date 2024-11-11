@@ -1,11 +1,11 @@
 import java.util.concurrent.Semaphore;
 
-public class Parking {
+public class ParkingLot {
     private final Semaphore parkingSpots;
     private int currentCarsInParking;
     private int totalCarsServed;
 
-    public Parking(int totalSpots) {
+    public ParkingLot(int totalSpots) {
         this.parkingSpots = new Semaphore(totalSpots, true);
         this.currentCarsInParking = 0;
         this.totalCarsServed = 0;
@@ -13,42 +13,39 @@ public class Parking {
 
     public void parkCar(int carId, String gateName, int arrivalTime, int parkingDuration) {
         try {
-            System.out.printf("Car %d from %s arrived at time %d%n", carId, gateName, arrivalTime);
+            System.out.println("Car " + carId + " from " + gateName + " arrived at time " + arrivalTime);
 
             if (parkingSpots.tryAcquire()) {
                 synchronized (this) {
                     currentCarsInParking++;
                     totalCarsServed++;
                 }
-                System.out.printf("Car %d from %s parked. (Parking Status: %d spots occupied)%n",
-                        carId, gateName, currentCarsInParking);
+                System.out.println("Car " + carId + " from " + gateName + " parked. (Parking Status: " + currentCarsInParking + " spots occupied");
 
                 Thread.sleep(parkingDuration * 1000L);
                 leaveParking(carId, gateName, parkingDuration);
             } else {
-                System.out.printf("Car %d from %s waiting for a spot.%n", carId, gateName);
+                System.out.println("Car " + carId + " from " + gateName + " waiting for a spot.");
                 parkingSpots.acquire();
 
                 synchronized (this) {
                     currentCarsInParking++;
                     totalCarsServed++;
                 }
-                System.out.printf("Car %d from %s parked after waiting. (Parking Status: %d spots occupied)%n",
-                        carId, gateName, currentCarsInParking);
+                System.out.println("Car " + carId + " from " + gateName + " parked after waiting. (Parking Status: " + currentCarsInParking + " spots occupied)");
 
                 Thread.sleep(parkingDuration * 1000L);
                 leaveParking(carId, gateName, parkingDuration);
             }
         } catch (InterruptedException e) {
-            System.err.printf("Car %d from %s encountered an error: %s%n", carId, gateName, e.getMessage());
+            System.err.printf(e.getMessage());
         }
     }
 
     public synchronized void leaveParking(int carId, String gateName, int parkingDuration) {
         currentCarsInParking--;
         parkingSpots.release();
-        System.out.printf("Car %d from %s left after %d units of time. (Parking Status: %d spots occupied)%n",
-                carId, gateName, parkingDuration, currentCarsInParking);
+        System.out.println("Car " + carId + " from " + gateName + " left after "+ parkingDuration + " units of time. (Parking Status: " + currentCarsInParking + " spots occupied)");
     }
 
     public int getTotalCarsServed() {
@@ -58,4 +55,7 @@ public class Parking {
     public int getCurrentCarsInParking() {
         return currentCarsInParking;
     }
+
+
+
 }
