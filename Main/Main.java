@@ -65,6 +65,7 @@ public class Main {
             System.out.println(e.getMessage());
         }
 
+        System.out.println("---------------------------------------------------------");
         System.out.println("Total Cars Served: " + p.getTotalCarsServed());
         System.out.println("Current Cars in Parking: " + p.getCurrentCarsInParking());
         System.out.println("Details:");
